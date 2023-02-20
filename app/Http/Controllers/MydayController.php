@@ -19,6 +19,7 @@ class MydayController extends Controller
         //last
         //last na to 
         //new changes 
+        // git push then to the origin
         return view('mydays.visit-other', [
             'mydays' => $mydays,
         ]);
