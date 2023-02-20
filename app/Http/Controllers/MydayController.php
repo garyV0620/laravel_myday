@@ -15,6 +15,7 @@ class MydayController extends Controller
         // dd($mydays);
         //test git 
         //second direct push
+        //3rd commit
         return view('mydays.visit-other', [
             'mydays' => $mydays,
         ]);
