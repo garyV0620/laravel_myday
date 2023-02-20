@@ -13,13 +13,6 @@ class MydayController extends Controller
     {
         $mydays = Myday::with('user')->where('user_id', $request->id)->latest()->get();
         // dd($mydays);
-        //test git 
-        //second direct push
-        //3rd commit
-        //last
-        //last na to 
-        //new changes 
-        // git push then to the origin
         return view('mydays.visit-other', [
             'mydays' => $mydays,
         ]);
