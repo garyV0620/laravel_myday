@@ -18,6 +18,7 @@ class MydayController extends Controller
         //3rd commit
         //last
         //last na to 
+        //new changes 
         return view('mydays.visit-other', [
             'mydays' => $mydays,
         ]);
