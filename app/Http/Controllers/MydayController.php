@@ -13,6 +13,7 @@ class MydayController extends Controller
     {
         $mydays = Myday::with('user')->where('user_id', $request->id)->latest()->get();
         // dd($mydays);
+        //direct
         return view('mydays.visit-other', [
             'mydays' => $mydays,
         ]);
