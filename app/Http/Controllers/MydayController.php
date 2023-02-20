@@ -13,7 +13,7 @@ class MydayController extends Controller
     {
         $mydays = Myday::with('user')->where('user_id', $request->id)->latest()->get();
         // dd($mydays);
-
+        //test git 
         return view('mydays.visit-other', [
             'mydays' => $mydays,
         ]);
