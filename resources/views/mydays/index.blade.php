@@ -144,6 +144,9 @@
                     mydayDiv.empty();
                     mydayDiv.addClass('bg-white shadow-sm shadow-xl');
                     mydayDiv.append(completeMyday);
+                },
+                error: function(jqXHR,error, errorThrown) {  
+                    window.location.href= "{{ route('login') }}";
                 }
             });
         }
