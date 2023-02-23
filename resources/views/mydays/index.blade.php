@@ -3,6 +3,7 @@
         <form method="POST" action="{{ route('mydays.store') }}">
             @csrf
             <textarea
+                id="mind"
                 name="message"
                 placeholder="{{ __('What\'s on your mind?') }}"
                 class="p-6 shadow-2xl block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md ">{{ old('message') }}</textarea>
@@ -63,6 +64,7 @@
 
     </div>
     <script>
+        
         const  mydayDiv = $('.my-days-content');
         mydayDiv.removeClass('bg-white shadow-sm shadow-xl');
 
@@ -135,6 +137,8 @@
                                    ${isUser}
                                 </div>
                                 <p class="mt-4 text-2xl text-gray-900">${myday.message}</p>
+                                <textarea onfocus="isCommentClick=true;clearInterval(ajaxTick)" onfocusout="var isType=$(this).val(); if(isCommentClick && isType==''){ajaxTick = setInterval(getMyday,2000);} isCommentClick=false;"></textarea>
+                                <x-secondary-button class="mt-4" onclick="var textareaVal = $(this).siblings('textarea'); if(textareaVal.val() != ''){ajaxTick = setInterval(getMyday,2000)} $('textarea').val('')" >{{ __('Comment') }}</x-secondary-button>
                             </div>
                         </div>
                         `;
@@ -151,9 +155,56 @@
             });
         }
 
-        setInterval(getMyday,2000);
+        var ajaxTick = setInterval(getMyday,2000);
        
-        // getMyday();
+        $(document).ready(function(){
+            var isCommentClick;
+            var ph = "What's on your mind? ",
+            searchBar = $('#mind'),
+            // placeholder loop counter
+            phCount = 0;
+
+            // function to return random number between
+            // with min/max range
+            function randDelay(min, max) {
+                return Math.floor(Math.random() * (max-min+1)+min);
+            }
+
+            // function to print placeholder text in a 
+            // 'typing' effect
+            function printLetter(string, el) {
+                // split string into character seperated array
+                var arr = string.split(''),
+                    input = el,
+                    // store full placeholder
+                    origString = string,
+                    // get current placeholder value
+                    curPlace = $(input).attr("placeholder"),
+                    // append next letter to current placeholder
+                    placeholder = curPlace + arr[phCount];
+                    
+                setTimeout(function(){
+                    // print placeholder text
+                    $(input).attr("placeholder", placeholder);
+                    // increase loop count
+                    phCount++;
+                    // run loop until placeholder is fully printed
+                    if (phCount < arr.length) {
+                        printLetter(origString, input);
+                    }
+                // use random speed to simulate
+                // 'human' typing
+                }, randDelay(50, 90));
+            }  
+
+            // function to init animation
+            function placeholder() {
+                $(searchBar).attr("placeholder", "");
+                printLetter(ph, searchBar);
+            }
+
+            placeholder();
+        });
      
     </script>
   
