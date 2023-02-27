@@ -68,6 +68,41 @@
         const  mydayDiv = $('.my-days-content');
         mydayDiv.removeClass('bg-white shadow-sm shadow-xl');
 
+        //function to determine the ago in the comment or myday dates
+        function timeAgo(inputDate1, inputDate2){
+            const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+            const MINPERDAY = 1440;
+            const MINPERHOUR = 60;
+            const MAXDAY = 2;
+            let diff;
+            let date1 = moment(inputDate1);
+            let date2 = moment(inputDate2);
+
+            if(!date1.isValid() || !date2.isValid()){
+                return "invalid dates";
+            }
+            
+            let diffMinute = date2.diff(date1, 'minute');
+
+            if(Math.abs(diffMinute) >= MINPERDAY){
+                let dayNow = rtf.format(Math.ceil(diffMinute/MINPERDAY), "day");
+
+                if(Math.abs(Math.ceil(diffMinute/MINPERDAY)) > MAXDAY){
+                    return moment(date2).format('D MMM YYYY, h:mm a');
+                }else if(dayNow != 'today'){ 
+                    return dayNow;
+                }
+            }
+            if(Math.abs(diffMinute) >= MINPERHOUR){
+                let hourNow = Math.ceil(diffMinute/MINPERHOUR);
+                let minNow = Math.abs(diffMinute - (hourNow * MINPERHOUR ));
+          
+                return (minNow > 0) ? minNow + " min " + rtf.format(hourNow, "hour") : rtf.format(hourNow, "hour");
+            }
+            return (diffMinute == 0) ? "just now" : rtf.format(diffMinute, "minute");
+            
+        }
+
         function getMyday(){
             $.ajaxSetup({
                 headers: {
@@ -83,12 +118,12 @@
                     _token: $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response){
-                    
+                    // console.log(response);
                     
                     var completeMyday = '';
                     $.each(response, function(key, myday){
                         var dateStr = myday.created_at;
-                        var formattedDate = moment(dateStr).format('D MMM YYYY, h:mm a');
+                        var formattedDate =  timeAgo(moment(), dateStr);
 
                         let editUrl = '{{ route("mydays.edit", ":id") }}'.replace(':id', myday.id);
                         let deleteUrl = '{{ route("mydays.destroy", ":id") }}'.replace(':id', myday.id);
@@ -121,7 +156,27 @@
                                 </div>
                             `;
                         }
-
+                        let comments ='';
+                        if(myday.comment.length > 0){
+                            $.each(myday.comment, function(key, comment){
+                                var formattedDateComment =  timeAgo(moment(), comment.created_at);
+                                let visitOtherComment = '{{ route("mydays.visitOther", ["id"=>":id"]) }}'.replace(':id', comment.user_id);
+                                let isEditComment ='';
+                                if (comment.created_at != comment.updated_at) {
+                                    isEditComment = `
+                                        <small class="text-xs text-gray-600"> &middot; {{ __('edited') }} </small>
+                                    `;
+                                }
+                                comments += `
+                                    <div class='bg-gray-100 max-w-full pl-3 pt-1 mb-1'>
+                                        <a href="${visitOtherComment}"><span class="text-slate-600 font-bold text-base">${comment.author.name}</span></a> <span  class="text-slate-700 text-base" >${comment.comment}</span>
+                                        <p class="-mt-2"><span class="text-xs text-slate-400">${formattedDateComment}</span> ${isEditComment}</p>
+                                    </div>
+                                `;
+                            });
+                        }
+                      
+    
                         let mydayBody = `
                         <div class="p-6 flex space-x-2 mb-5 shadow-lg">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600 -scale-x-100" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -137,8 +192,12 @@
                                    ${isUser}
                                 </div>
                                 <p class="mt-4 text-2xl text-gray-900">${myday.message}</p>
-                                <textarea onfocus="isCommentClick=true;clearInterval(ajaxTick)" onfocusout="var isType=$(this).val(); if(isCommentClick && isType==''){ajaxTick = setInterval(getMyday,2000);} isCommentClick=false;"></textarea>
-                                <x-secondary-button class="mt-4" onclick="var textareaVal = $(this).siblings('textarea'); if(textareaVal.val() != ''){ajaxTick = setInterval(getMyday,2000)} $('textarea').val('')" >{{ __('Comment') }}</x-secondary-button>
+                                <div class="mt-5 commentSection" data-id="${myday.id}">
+                                    ${comments}
+                                </div>
+                                <textarea style="border:dashed 1px black;" class="w-full mt-5 border-double" rows="2" onfocus="isCommentClick=true;clearInterval(ajaxTick)" onfocusout="var isType=$(this).val(); if(isCommentClick && isType==''){ajaxTick = setInterval(getMyday,2000);} isCommentClick=false;"></textarea>
+                                <input type="hidden" value="${myday.id}" class='myday_id'>
+                                <x-secondary-button class="float-right" onclick="var textareaVal = $(this).siblings('textarea') ;commentAjax(${myday.id}, textareaVal.val()); if(textareaVal.val() != ''){ajaxTick = setInterval(getMyday,2000)} $('textarea').val('')" >{{ __('Comment') }}</x-secondary-button>
                             </div>
                         </div>
                         `;
@@ -155,8 +214,54 @@
             });
         }
 
+        function commentAjax(myday_ids, textareaVal){
+            // alert(myday_ids + textareaVal );
+            if(textareaVal != ''){
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+            
+                $.ajax({
+                    type: 'post',
+                    url: "{{ route('comments.store') }}",
+                    dataType: 'json',
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                        myday_id : myday_ids,
+                        comment : textareaVal
+                    },
+                    success:function(response){
+                        // console.log(response);
+                        let visitOtherComment = '{{ route("mydays.visitOther", ["id"=>":id"]) }}'.replace(':id', response.commentsInfo.user_id);
+                        var formattedDateComment =  timeAgo(moment(), response.commentsInfo.created_at);
+                        let isEditComment ='';
+                        if (response.commentsInfo.created_at != response.commentsInfo.updated_at) {
+                            isEditComment = `
+                                <small class="text-xs text-gray-600"> &middot; {{ __('edited') }} </small>
+                            `;
+                        }
+                        let newComment = `
+                            <div class='bg-gray-100 max-w-full pl-3 pt-1 mb-1'>
+                                <a href="${visitOtherComment}"><span class="text-slate-600 font-bold text-base">${response.user.name}</span></a> <span  class="text-slate-700 text-base" >${response.commentsInfo.comment}</span>
+                                <p class="-mt-2"><span class="text-xs text-slate-400">${formattedDateComment}</span> ${isEditComment}</p>
+                            </div>
+                        `;
+                        $('[data-id="'+myday_ids+'"]').append(newComment);
+                    },
+                    error:function(){
+
+                    }
+                });
+            }
+          
+        }
+
         var ajaxTick = setInterval(getMyday,2000);
-       
+        // getMyday();
+        
+        //typing effect
         $(document).ready(function(){
             var isCommentClick;
             var ph = "What's on your mind? ",
@@ -202,7 +307,6 @@
                 $(searchBar).attr("placeholder", "");
                 printLetter(ph, searchBar);
             }
-
             placeholder();
         });
      

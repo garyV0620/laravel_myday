@@ -48,6 +48,11 @@ class User extends Authenticatable
         return $this->hasMany(Myday::class);
     }
 
+    public function mycomments()
+    {
+        return $this->hasMany(Comments::class);
+    }
+
     public function hasRole($role)
     {
         return $this->role == $role;

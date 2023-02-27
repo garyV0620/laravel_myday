@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\MydayController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -25,6 +26,11 @@ Route::get('/dashboard', function () {
 
 Route::resource('mydays', MydayController::class)
         ->only(['index','store', 'edit', 'update', 'destroy'])
+        ->middleware(['auth','verified']);
+
+// comment route 
+Route::resource('comments', CommentsController::class)
+        ->only(['store'])
         ->middleware(['auth','verified']);
 
 Route::middleware('auth')->group(function () {

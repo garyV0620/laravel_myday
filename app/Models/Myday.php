@@ -19,4 +19,9 @@ class Myday extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function comment()
+    {
+        return $this->hasMany(Comments::class, 'myday_id')->with('author');
+    }
 }

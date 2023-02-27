@@ -20,7 +20,7 @@ class MydayController extends Controller
     }
     public function ajaxMyday()
     {   
-        $additionalMydays = Myday::with('user')->latest()->get();
+        $additionalMydays = Myday::with('user')->with('comment')->latest()->get();
        
         return response()->json($additionalMydays);
        
