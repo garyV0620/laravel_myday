@@ -73,36 +73,46 @@
             const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
             const MINPERDAY = 1440;
             const MINPERHOUR = 60;
-            const MAXDAY = 2;
+            const MAXDAY = 3;
             let diff;
             let date1 = moment(inputDate1);
             let date2 = moment(inputDate2);
 
+            //validate the dates
             if(!date1.isValid() || !date2.isValid()){
                 return "invalid dates";
             }
             
+            //get the difference of the two dates (if negative it is ago)
             let diffMinute = date2.diff(date1, 'minute');
 
+            //check if minutes is past a day
             if(Math.abs(diffMinute) >= MINPERDAY){
+                //get the days ago
                 let dayNow = rtf.format(Math.ceil(diffMinute/MINPERDAY), "day");
 
+                //if day is greater than na maxday it will display the dates
                 if(Math.abs(Math.ceil(diffMinute/MINPERDAY)) > MAXDAY){
                     return moment(date2).format('D MMM YYYY, h:mm a');
                 }else if(dayNow != 'today'){ 
                     return dayNow;
                 }
             }
+
+            //check if minutes is past hours and min
             if(Math.abs(diffMinute) >= MINPERHOUR){
                 let hourNow = Math.ceil(diffMinute/MINPERHOUR);
                 let minNow = Math.abs(diffMinute - (hourNow * MINPERHOUR ));
           
                 return (minNow > 0) ? minNow + " min " + rtf.format(hourNow, "hour") : rtf.format(hourNow, "hour");
             }
+
+            //return minutes ago if not past an hour and if 0 return just now
             return (diffMinute == 0) ? "just now" : rtf.format(diffMinute, "minute");
             
         }
 
+        //fanction fot getting ajax of myday
         function getMyday(){
             $.ajaxSetup({
                 headers: {
@@ -123,6 +133,7 @@
                     var completeMyday = '';
                     $.each(response, function(key, myday){
                         var dateStr = myday.created_at;
+                        //get time ago
                         var formattedDate =  timeAgo(moment(), dateStr);
 
                         let editUrl = '{{ route("mydays.edit", ":id") }}'.replace(':id', myday.id);
@@ -130,12 +141,16 @@
                         let visitOther = '{{ route("mydays.visitOther", ["id"=>":id"]) }}'.replace(':id', myday.user.id);
 
                         let isEdited = '';
+
+                        //check if myday is edited
                         if (myday.created_at != myday.updated_at) {
                             isEdited = `
                                  <small class="text-sm text-gray-600"> &middot; {{ __('edited') }} </small>
                             `;
                         }
                         let isUser ='';
+
+                        //check if user can edit or delete
                         if (myday.user.id == {{auth()->id()}}) {
                             isUser = `
                                 <div class='flex'>
@@ -156,19 +171,23 @@
                                 </div>
                             `;
                         }
+
                         let comments ='';
+
+                        // check if myday has a comment
                         if(myday.comment.length > 0){
                             $.each(myday.comment, function(key, comment){
                                 var formattedDateComment =  timeAgo(moment(), comment.created_at);
                                 let visitOtherComment = '{{ route("mydays.visitOther", ["id"=>":id"]) }}'.replace(':id', comment.user_id);
                                 let isEditComment ='';
+                                //check if comment is edited
                                 if (comment.created_at != comment.updated_at) {
                                     isEditComment = `
                                         <small class="text-xs text-gray-600"> &middot; {{ __('edited') }} </small>
                                     `;
                                 }
                                 comments += `
-                                    <div class='bg-gray-100 max-w-full pl-3 pt-1 mb-1'>
+                                    <div class='bg-gray-100 max-w-full pl-3 py-1 mb-1'>
                                         <a href="${visitOtherComment}"><span class="text-slate-600 font-bold text-base">${comment.author.name}</span></a> <span  class="text-slate-700 text-base" >${comment.comment}</span>
                                         <p class="-mt-2"><span class="text-xs text-slate-400">${formattedDateComment}</span> ${isEditComment}</p>
                                     </div>
@@ -176,7 +195,7 @@
                             });
                         }
                       
-    
+                        //body of myday
                         let mydayBody = `
                         <div class="p-6 flex space-x-2 mb-5 shadow-lg">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600 -scale-x-100" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -191,7 +210,9 @@
                                     </div>
                                    ${isUser}
                                 </div>
-                                <p class="mt-4 text-2xl text-gray-900">${myday.message}</p>
+
+                                <p class="text-2xl text-gray-900">${myday.message}</p>
+
                                 <div class="mt-5 commentSection" data-id="${myday.id}">
                                     ${comments}
                                 </div>
@@ -201,19 +222,25 @@
                             </div>
                         </div>
                         `;
+                        //append all mydays
                         completeMyday += mydayBody;
                     });
-                   
+
+                   //make sure the myday div is empty
                     mydayDiv.empty();
                     mydayDiv.addClass('bg-white shadow-sm shadow-xl');
+
+                    //append the completed mydays
                     mydayDiv.append(completeMyday);
                 },
-                error: function(jqXHR,error, errorThrown) {  
+                //if error in ajax occurs
+                error: function(jqXHR, error, errorThrown) {  
                     window.location.href= "{{ route('login') }}";
                 }
             });
         }
 
+        // ajax in comment section
         function commentAjax(myday_ids, textareaVal){
             // alert(myday_ids + textareaVal );
             if(textareaVal != ''){
@@ -236,28 +263,35 @@
                         // console.log(response);
                         let visitOtherComment = '{{ route("mydays.visitOther", ["id"=>":id"]) }}'.replace(':id', response.commentsInfo.user_id);
                         var formattedDateComment =  timeAgo(moment(), response.commentsInfo.created_at);
+
                         let isEditComment ='';
+
+                        //check if comment is edited
                         if (response.commentsInfo.created_at != response.commentsInfo.updated_at) {
                             isEditComment = `
                                 <small class="text-xs text-gray-600"> &middot; {{ __('edited') }} </small>
                             `;
                         }
+
+                        //body of new comment 
                         let newComment = `
                             <div class='bg-gray-100 max-w-full pl-3 pt-1 mb-1'>
                                 <a href="${visitOtherComment}"><span class="text-slate-600 font-bold text-base">${response.user.name}</span></a> <span  class="text-slate-700 text-base" >${response.commentsInfo.comment}</span>
                                 <p class="-mt-2"><span class="text-xs text-slate-400">${formattedDateComment}</span> ${isEditComment}</p>
                             </div>
                         `;
+
+                        //append the comment uppon clicking comment
                         $('[data-id="'+myday_ids+'"]').append(newComment);
                     },
-                    error:function(){
-
+                    error: function(jqXHR,error, errorThrown) {  
+                        window.location.href= "{{ route('login') }}";
                     }
                 });
             }
           
         }
-
+        //refresh the myday every 2sec
         var ajaxTick = setInterval(getMyday,2000);
         // getMyday();
         
