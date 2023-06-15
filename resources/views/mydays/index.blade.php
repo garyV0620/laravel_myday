@@ -78,7 +78,7 @@
             let date1 = moment(inputDate1);
             let date2 = moment(inputDate2);
 
-            //validate the dates
+            //validate the dates add this after reset
             if(!date1.isValid() || !date2.isValid()){
                 return "invalid dates";
             }
