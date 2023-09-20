@@ -25,30 +25,74 @@ Follow these steps to install and set up the project:
    $ git clone https://github.com/garyV0620/laravel_myday.git
    $ cd laravel_myday
    
-2. Run composer install on your cmd or terminal.
-3. Run npm install on your terminal.
-4. Copy .env.example file to .env on the root folder. You can type copy .env.example .env if using command prompt Windows or cp .env.example .env if using terminal Ubuntu.
-5. Edit .env change all Database settings
+2. Install Composer Dependencies:
+    Run the following command on your command prompt or terminal:
+    ```bash
+   $ cd laravel_myday
+
+4. Install Node.js Dependencies:
+    Run the following command on your terminal:
+     ```bash
+   $ npm install
+6. Copy .env.example file to .env on the root folder. You can type copy .env.example .env if using command prompt Windows or cp .env.example .env if using terminal Ubuntu.
+7. Configure Environment Variables:
+   Copy the .env.example file to .env in the project's root folder. Use the appropriate command for your operating system:
+    
+8. Database Configuration:
+    Edit the .env file and update the database settings according to your setup. For MySQL, use the following configuration:
+    ```dotenv
     DB_CONNECTION=mysql
     DB_HOST=127.0.0.1
     DB_PORT=3306
     DB_DATABASE=laravel
     DB_USERNAME=root
     DB_PASSWORD=
-    
-    Or you can use sqlite by commenting all on the top from your .env then use
+    ```  
+    Alternatively, for SQLite, comment out the MySQL settings and use:
+     ```dotenv
     DB_CONNECTION=sqlite
 
-6. Generate an app encryption key by running php artisan key:generate.
-7. Run php artisan migrate. (if sqlite is use type 'yes' if prompt to create file)
-8. To Run the APP
-    8.1. Run npm run dev. (if you want to use custom host and port Run npm run dev -- --host=yourhostORIp --port=yourPort)
-    8.2. Open another terminal
-    8.3. Run php artisan serve. (if you want to use custom host and port Run php artisan serve --host=yourhostORIp --port=yourPort)(do not use same port on npm run dev)
-    8.4. Open another terminal then Run php artisan websocket:init 
-    8.5. Then check INFO  Server running on [http://127.0.0.1:8001].
-    8.6. Open http://127.0.0.1:8001 on your browser.
-9. Enjoy using the APP
+9. Generate an Encryption Key:
+   Run the following command to generate an application encryption key:
+    ```bash
+    $ php artisan key:generate
+    
+10. Run Database Migrations:
+   Execute the following command to run database migrations:
+    ```bash
+    $ php artisan migrate
+11. Run the Application:
+    11.1. To run the application, follow these steps:
+    ```bash
+    $ npm run dev
+    ```
+    
+    If you want to use a custom host and port:
+    ```bash
+    $ php artisan serve --host=yourhostORIp --port=yourPort
+    ```
+    11.2. Open another terminal.
+    11.3. Start the PHP development server:
+    ```bash
+    $ php artisan serve
+    ```
+    
+    If you want to use a custom host and port:
+    
+    ```bash
+    $ php artisan serve --host=yourhostORIp --port=yourPort
+    ```
+    
+    **Note:** Do not use the same port as the one used for `npm run dev`.
+
+    11.4. Open another terminal and run the WebSocket server:
+    ```bash
+    $ php artisan websocket:init
+    ```
+    11.5. Check the INFO message: Server running on [http://127.0.0.1:8001].
+    11.6. Open [http://127.0.0.1:8001] in your web browser.
+
+12. Enjoy using the APP
 
 
 
