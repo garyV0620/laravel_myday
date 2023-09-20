@@ -3,7 +3,8 @@ This App is like a twitter that you can post and comments on each post.
 
 ## About
 This project uses laravel framework with blade template.
-It also uses websocket on a realtime comment update and shows also if someone is commenting on a myday
+It also uses websocket on a realtime comment update and shows also if someone is commenting on a myday.
+It also uses Laravel Breeze.
 
 ## Getting Started
 You can clone the repository (https://github.com/garyV0620/laravel_myday.git) or download it 
@@ -46,7 +47,7 @@ Follow these steps to install and set up the project:
      ```dotenv
     DB_CONNECTION=sqlite
     ```
-    type 'yes' if prompt to create
+   
 
 6. Generate an Encryption Key:
    Run the following command to generate an application encryption key:
@@ -57,6 +58,8 @@ Follow these steps to install and set up the project:
    Execute the following command to run database migrations:
     ```bash
     $ php artisan migrate
+    ```
+     type 'yes' if prompt to create
 8. Run the Application: To run the application, follow these steps:
 
     8.1. Run the development build  
@@ -90,7 +93,7 @@ Follow these steps to install and set up the project:
     
     8.6. Open [http://127.0.0.1:8001] in your web browser.
 
-9. Enjoy using the APP
+9. Enjoy using the APP (you can register by clicking Register Account)
 
 
 
