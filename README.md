@@ -25,15 +25,14 @@ Follow these steps to install and set up the project:
     ```bash
    $ composer install
 
-4. Install Node.js Dependencies:
+3. Install Node.js Dependencies:
     Run the following command on your terminal:
      ```bash
    $ npm install
-6. Copy .env.example file to .env on the root folder. You can type copy .env.example .env if using command prompt Windows or cp .env.example .env if using terminal Ubuntu.
-7. Configure Environment Variables:
-   Copy the .env.example file to .env in the project's root folder. Use the appropriate command for your operating system:
+     
+4. Copy .env.example file to .env on the root folder.
     
-8. Database Configuration:
+5. Database Configuration:
     Edit the .env file and update the database settings according to your setup. For MySQL, use the following configuration:
     ```dotenv
     DB_CONNECTION=mysql
@@ -46,29 +45,32 @@ Follow these steps to install and set up the project:
     Alternatively, for SQLite, comment out the MySQL settings and use:
      ```dotenv
     DB_CONNECTION=sqlite
+    ```
+    type 'yes' if prompt to create
 
-9. Generate an Encryption Key:
+6. Generate an Encryption Key:
    Run the following command to generate an application encryption key:
     ```bash
     $ php artisan key:generate
     
-10. Run Database Migrations:
+7. Run Database Migrations:
    Execute the following command to run database migrations:
     ```bash
     $ php artisan migrate
-11. Run the Application:
-    11.1. To run the application, follow these steps:
+8. Run the Application: To run the application, follow these steps:
+
+    8.1. Run the development build  
     ```bash
     $ npm run dev
     ```
     If you want to use a custom host and port:
     ```bash
-    $ php artisan serve --host=yourhostORIp --port=yourPort
+    $ npm run dev -- --host=yourhostORIp --port=yourPort
     ```
     
-    11.2. Open another terminal.
+    8.2. Open another terminal.
     
-    11.3. Start the PHP development server:
+    8.3. Start the PHP development server:
     ```bash
     $ php artisan serve
     ```
@@ -79,16 +81,16 @@ Follow these steps to install and set up the project:
     
     **Note:** Do not use the same port as the one used for `npm run dev`.
 
-    11.4. Open another terminal and run the WebSocket server:
+    8.4. Open another terminal and run the WebSocket server:
     ```bash
     $ php artisan websocket:init
     ```
     
-    11.5. Check the INFO message: Server running on [http://127.0.0.1:8001].
+    8.5. Check the INFO message: Server running on [http://127.0.0.1:8001].
     
-    11.6. Open [http://127.0.0.1:8001] in your web browser.
+    8.6. Open [http://127.0.0.1:8001] in your web browser.
 
-13. Enjoy using the APP
+9. Enjoy using the APP
 
 
 
