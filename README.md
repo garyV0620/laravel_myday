@@ -16,10 +16,15 @@ You can clone the repository (https://github.com/garyV0620/laravel_myday.git) or
 -NODE JS 
 -GIT
 
-### Installation
-1. Clone repository using GIT
-    $ git clone https://github.com/garyV0620/laravel_myday.git
-    $ cd laravel_myday
+## Installation
+
+Follow these steps to install and set up the project:
+
+1. **Clone the Repository:**
+   ```bash
+   $ git clone https://github.com/garyV0620/laravel_myday.git
+   $ cd laravel_myday
+   
 2. Run composer install on your cmd or terminal.
 3. Run npm install on your terminal.
 4. Copy .env.example file to .env on the root folder. You can type copy .env.example .env if using command prompt Windows or cp .env.example .env if using terminal Ubuntu.
