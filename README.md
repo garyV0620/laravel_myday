@@ -1,66 +1,97 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Myday App 
+This App is like a twitter that you can post and comments on each post. 
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## About
+This project uses laravel framework with blade template.
+It also uses websocket on a realtime comment update and shows also if someone is commenting on a myday
 
-## About Laravel
+## Getting Started
+You can clone the repository (https://github.com/garyV0620/laravel_myday.git) or download it 
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Prerequisites
+-PHP 8.0 and Up, SQL, Or you can use local server such as WAMP or XAMP or LAMP, COMPOSER, NODE JS, GIT
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Installation
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Follow these steps to install and set up the project:
 
-## Learning Laravel
+1. **Clone the Repository:**
+   ```bash
+   $ git clone https://github.com/garyV0620/laravel_myday.git
+   $ cd laravel_myday
+   
+2. Install Composer Dependencies:
+    Run the following command on your command prompt or terminal:
+    ```bash
+   $ composer install
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+3. Install Node.js Dependencies:
+    Run the following command on your terminal:
+     ```bash
+   $ npm install
+     
+4. Copy .env.example file to .env on the root folder.
+    
+5. Database Configuration:
+    Edit the .env file and update the database settings according to your setup. For MySQL, use the following configuration:
+    ```dotenv
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=laravel
+    DB_USERNAME=root
+    DB_PASSWORD=
+    ```  
+    Alternatively, for SQLite, comment out the MySQL settings and use:
+     ```dotenv
+    DB_CONNECTION=sqlite
+    ```
+    type 'yes' if prompt to create
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+6. Generate an Encryption Key:
+   Run the following command to generate an application encryption key:
+    ```bash
+    $ php artisan key:generate
+    
+7. Run Database Migrations:
+   Execute the following command to run database migrations:
+    ```bash
+    $ php artisan migrate
+8. Run the Application: To run the application, follow these steps:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+    8.1. Run the development build  
+    ```bash
+    $ npm run dev
+    ```
+    If you want to use a custom host and port:
+    ```bash
+    $ npm run dev -- --host=yourhostORIp --port=yourPort
+    ```
+    
+    8.2. Open another terminal.
+    
+    8.3. Start the PHP development server:
+    ```bash
+    $ php artisan serve
+    ```
+    If you want to use a custom host and port:
+    ```bash
+    $ php artisan serve --host=yourhostORIp --port=yourPort
+    ```
+    
+    **Note:** Do not use the same port as the one used for `npm run dev`.
 
-## Laravel Sponsors
+    8.4. Open another terminal and run the WebSocket server:
+    ```bash
+    $ php artisan websocket:init
+    ```
+    
+    8.5. Check the INFO message: Server running on [http://127.0.0.1:8001].
+    
+    8.6. Open [http://127.0.0.1:8001] in your web browser.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+9. Enjoy using the APP
 
-### Premium Partners
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
 
-## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
