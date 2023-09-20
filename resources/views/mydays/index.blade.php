@@ -65,16 +65,17 @@
     <script>
         
         const  mydayDiv = $('.my-days-content');
+		const hostName = window.location.hostname;
         mydayDiv.removeClass('bg-white shadow-sm shadow-xl');
             //initiate the websocket
-            var conn = new WebSocket('ws://192.168.1.167:8090/');
+            var conn = new WebSocket('ws://'+hostName+':8090/');
             //log to console if connected
             conn.onopen = function(e){
                 console.log("Connection established!");
             };
             //connect to a specific websocket with query string on the url
             function connectNow(commentId){
-                conn = new WebSocket('ws://192.168.1.167:8090/?typing=yes&userId={{ Auth::user()->id }}&commentId='+commentId);
+                conn = new WebSocket('ws://'+hostName+':8090?typing=yes&userId={{ Auth::user()->id }}&commentId='+commentId);
             }
 
             //when connected to websocket and send() if used
