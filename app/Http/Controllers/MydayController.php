@@ -106,7 +106,9 @@ class MydayController extends Controller
         $validated = $request->validate([
             'message' => 'required|string|max:255',
         ]);
-
+        //query in the model sample
+        // $myday->updateData($request);
+        
         $myday->update($validated);
 
         return redirect(route('mydays.index'));
