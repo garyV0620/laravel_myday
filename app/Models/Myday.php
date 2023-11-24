@@ -15,6 +15,17 @@ class Myday extends Model
         'message',
     ];
 
+    // All query and validation should be in model
+    // samples
+    //  public function updateData(array $data)
+    // {
+    //      $validated = $data->validate([
+    //                'message' => 'required|string|max:255',
+    //            ]);
+    //     $this->fill($validated)->save();
+    // }
+
+    
     public function user()
     {
         return $this->belongsTo(User::class);
